@@ -1,0 +1,90 @@
+{
+  "summary": {
+    "full_benchmark_count": 65,
+    "verified_split_count": 9,
+    "full_path": "/mnt/c/Users/Lalit Chauhan/.gemini/antigravity/scratch/Nemotron-3-Ultra-550B-Systems-CoT/musespark_harvester/output/musespark_systems_full_benchmark.jsonl",
+    "verified_path": "/mnt/c/Users/Lalit Chauhan/.gemini/antigravity/scratch/Nemotron-3-Ultra-550B-Systems-CoT/musespark_harvester/output/musespark_systems_verified.jsonl"
+  },
+  "models": {
+    "nvidia/nemotron-3-ultra-550b-a55b": {
+      "total_samples": 49,
+      "compiler_verified_count": 17,
+      "compiler_pass_rate_pct": 34.69,
+      "exec_pass_at_1_count": 7,
+      "exec_pass_at_1_pct": 14.29,
+      "council_verified_count": 3,
+      "council_pass_rate_pct": 6.12,
+      "latency_p50_ms": 129362.3,
+      "latency_p95_ms": 323985.2,
+      "throughput_p50_tok_s": 51.93,
+      "mean_overthinking_ratio": 0.2296
+    },
+    "openai/gpt-oss-120b": {
+      "total_samples": 16,
+      "compiler_verified_count": 11,
+      "compiler_pass_rate_pct": 68.75,
+      "exec_pass_at_1_count": 10,
+      "exec_pass_at_1_pct": 62.5,
+      "council_verified_count": 6,
+      "council_pass_rate_pct": 37.5,
+      "latency_p50_ms": 13813.41,
+      "latency_p95_ms": 22549.41,
+      "throughput_p50_tok_s": 214.99,
+      "mean_overthinking_ratio": 0.1802
+    }
+  },
+  "splits": {
+    "nvidia_cuda_tensorrt": {
+      "total_samples": 16,
+      "compiler_verified_count": 5,
+      "compiler_pass_rate_pct": 31.25,
+      "exec_pass_at_1_count": 6,
+      "exec_pass_at_1_pct": 37.5,
+      "council_verified_count": 4,
+      "council_pass_rate_pct": 25.0,
+      "latency_p50_ms": 102888.01,
+      "latency_p95_ms": 693701.9,
+      "throughput_p50_tok_s": 54.44,
+      "mean_overthinking_ratio": 0.3496
+    },
+    "arm_embedded_rtl": {
+      "total_samples": 15,
+      "compiler_verified_count": 8,
+      "compiler_pass_rate_pct": 53.33,
+      "exec_pass_at_1_count": 3,
+      "exec_pass_at_1_pct": 20.0,
+      "council_verified_count": 2,
+      "council_pass_rate_pct": 13.33,
+      "latency_p50_ms": 47966.35,
+      "latency_p95_ms": 161688.35,
+      "throughput_p50_tok_s": 52.43,
+      "mean_overthinking_ratio": 0.1308
+    },
+    "modern_cpp17_pybind11": {
+      "total_samples": 17,
+      "compiler_verified_count": 6,
+      "compiler_pass_rate_pct": 35.29,
+      "exec_pass_at_1_count": 2,
+      "exec_pass_at_1_pct": 11.76,
+      "council_verified_count": 0,
+      "council_pass_rate_pct": 0.0,
+      "latency_p50_ms": 111252.67,
+      "latency_p95_ms": 325009.21,
+      "throughput_p50_tok_s": 52.21,
+      "mean_overthinking_ratio": 0.1575
+    },
+    "s2_geodesic_spatial": {
+      "total_samples": 17,
+      "compiler_verified_count": 9,
+      "compiler_pass_rate_pct": 52.94,
+      "exec_pass_at_1_count": 6,
+      "exec_pass_at_1_pct": 35.29,
+      "council_verified_count": 3,
+      "council_pass_rate_pct": 17.65,
+      "latency_p50_ms": 106631.15,
+      "latency_p95_ms": 323985.2,
+      "throughput_p50_tok_s": 59.61,
+      "mean_overthinking_ratio": 0.2295
+    }
+  }
+}

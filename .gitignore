@@ -1,0 +1,30 @@
+# Environment & credentials (NEVER COMMIT)
+.env
+*.env
+*.pem
+*.key
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# OS / Editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Build artifacts & temp compiler binaries
+*.o
+*.out
+solution_bin
+temp_eval_*
