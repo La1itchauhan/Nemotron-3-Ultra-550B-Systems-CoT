@@ -44,9 +44,9 @@ ROOT_README = Path(__file__).resolve().parent.parent / "README.md"
 
 
 def extract_code_blocks(text: str) -> List[Tuple[str, str]]:
-    """Extracts fenced code blocks (lang, code)."""
+    """Extracts fenced code blocks (lang, code). Handles CRLF, trailing spaces, and unclosed blocks."""
     blocks = []
-    pattern = r"```([a-zA-Z0-9_\-+]*)\n(.*?)```"
+    pattern = r"```([a-zA-Z0-9_\-+]*)[\t ]*\r?\n(.*?)```"
     for match in re.finditer(pattern, text, re.DOTALL):
         lang = match.group(1).lower().strip()
         code = match.group(2).strip()
@@ -57,6 +57,21 @@ def extract_code_blocks(text: str) -> List[Tuple[str, str]]:
         elif lang in ["py", "python"]:
             lang = "python"
         blocks.append((lang, code))
+
+    if not blocks and "```" in text:
+        unclosed_match = re.search(r"```([a-zA-Z0-9_\-+]*)[\t ]*\r?\n(.*)", text, re.DOTALL)
+        if unclosed_match:
+            lang = unclosed_match.group(1).lower().strip()
+            code = unclosed_match.group(2).strip()
+            code = re.sub(r"```+$", "", code).strip()
+            if lang in ["cpp", "c++", "cxx", "cuda", "cu"]:
+                lang = "cpp"
+            elif lang in ["c"]:
+                lang = "c"
+            elif lang in ["py", "python"]:
+                lang = "python"
+            blocks.append((lang, code))
+
     return blocks
 
 
@@ -282,7 +297,8 @@ class VerificationCouncil:
             extracted_lang, extracted_code = blocks[0]
         else:
             extracted_lang = rec.get("language", "cpp")
-            extracted_code = answer
+            cleaned = re.sub(r"^```[a-zA-Z0-9_\-+]*[\t ]*\r?\n", "", answer.strip())
+            extracted_code = re.sub(r"```+$", "", cleaned).strip()
 
         # Agent 1
         syn_valid, comp_name, comp_diag = self.agent1_compiler_syntax(extracted_code, extracted_lang)

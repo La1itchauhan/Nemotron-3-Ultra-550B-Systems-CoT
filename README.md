@@ -39,13 +39,13 @@ configs:
 # Nemotron-3-Ultra-550B-Systems-CoT: 7-Agent Compiler-Verified Chain-of-Thought Dataset & Multi-Silicon Infrastructure Benchmark
 
 **Author:** Lalit Chauhan ([@la1itchauhan](https://github.com/la1itchauhan))  
-**Attribution:** *Built with Muse Spark Open* (`meta-models/muse-spark-open-1026` on Baseten), NVIDIA `nemotron-3-ultra-550b-a55b` (NVIDIA NIM), and `openai/gpt-oss-120b` / `20b` (Groq LPU Silicon).
+**Attribution:** Harvesting pipeline supports Muse Spark Open (`meta-models/muse-spark-open-1026` via Baseten); empirical benchmark baseline evaluated across NVIDIA NIM (`nvidia/nemotron-3-ultra-550b-a55b` on NVIDIA GPU Clusters) and Groq LPU Silicon (`openai/gpt-oss-120b`).
 
 ---
 
 ## 1. Executive Summary
 
-Following the verification paradigm established by **DeepSeek-R1 (`OpenThoughts-114k`, `Bespoke-Stratos-17k`, `Open-R1`)** and **NVIDIA `ComputeEval`**, `Nemotron-3-Ultra-550B-Systems-CoT` is a compiler-audited and runtime-verified Chain-of-Thought (`<think>...</think>`) reasoning dataset and multi-silicon serving benchmark across **low-level GPU/CUDA kernels, ARM bare-metal drone/embedded firmware, Modern C++17 systems, and Geodesic S2 / aerial mapping mathematics**.
+Following the verification paradigm established by **DeepSeek-R1 (`OpenThoughts-114k`, `Bespoke-Stratos-17k`, `Open-R1`)** and **NVIDIA `ComputeEval`**, `Nemotron-3-Ultra-550B-Systems-CoT` is an audited, runtime-verified Chain-of-Thought (`<think>...</think>`) reasoning dataset and multi-silicon serving benchmark across **low-level GPU/CUDA kernels, ARM bare-metal drone/embedded firmware, Modern C++17 systems, and Geodesic S2 / aerial mapping mathematics**.
 
 Every sample is audited by a **7-Agent Local Verification Council**:
 1. **Agent 1 (Compiler & Syntax Gatekeeper):** Validates C++17 (`g++ -std=c++17 -fsyntax-only -Wall`), C11 (`gcc -std=c11 -fsyntax-only -Wall`), and Python (`python3 -m py_compile`).
@@ -58,30 +58,40 @@ Every sample is audited by a **7-Agent Local Verification Council**:
 
 ---
 
-## 2. Silicon-vs-Silicon Model & Hardware Leaderboard (Baseten 816B vs. NVIDIA NIM 550B vs. Groq LPUs)
+## 2. Silicon-vs-Silicon Model & Hardware Leaderboard (NVIDIA NIM 550B vs. Groq LPU 120B)
 
 | Model | Inference Silicon | Deduplicated Samples | Compiler Syntax Pass | Full 7-Agent Verified | Median Latency (P50) | Median Throughput | Mean Overthinking Ratio |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| `nvidia/nemotron-3-ultra-550b-a55b` | NVIDIA GPU Cluster (NIM) | 49 | 36 (73.47%) | 35 (71.43%) | 129362.3 ms | **51.93 tok/s** | 0.2296 |
-| `openai/gpt-oss-120b` | Groq LPU Silicon | 16 | 16 (100.0%) | 14 (87.5%) | 13614.24 ms | **211.67 tok/s** | 0.1802 |
+| `nvidia/nemotron-3-ultra-550b-a55b` | NVIDIA GPU Cluster (NIM) | 49 | 36 (73.47%) | 25 (51.02%) | 129362.30 ms | **51.93 tok/s** | 0.2296 |
+| `openai/gpt-oss-120b` | Groq LPU Silicon | 16 | 15 (93.75%) | 13 (81.25%) | 13813.41 ms | **214.99 tok/s** | 0.1802 |
 
 ---
 
 ## 3. Domain Split Leaderboard (Deduplicated Best-of-N)
 
 - **Total Deduplicated Benchmark Samples (`full_benchmark` config):** `65`
-- **100% Council & Compiler-Verified Samples (`verified` config):** `49`
+- **100% Council & Compiler-Verified Samples (`verified` config):** `38`
 
 | Split | Samples | Syntax Pass (`g++`/`gcc`/`py`) | Functional `Pass@1` | Full 7-Agent Council Pass | Latency (P50 / P95) | Median Throughput | Mean Overthinking Ratio |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| `nvidia_cuda_tensorrt` | 16 | 9 (56.25%) | 9 (56.25%) | 9 (56.25%) | 91207.42 / 380842.83 ms | 54.09 tok/s | 0.3496 |
-| `arm_embedded_rtl` | 15 | 15 (100.0%) | 12 (80.0%) | 12 (80.0%) | 47966.35 / 158188.13 ms | 52.43 tok/s | 0.1308 |
-| `modern_cpp17_pybind11` | 17 | 14 (82.35%) | 14 (82.35%) | 14 (82.35%) | 111252.67 / 248712.66 ms | 52.21 tok/s | 0.1575 |
-| `s2_geodesic_spatial` | 17 | 14 (82.35%) | 14 (82.35%) | 14 (82.35%) | 106631.15 / 217970.77 ms | 59.61 tok/s | 0.2295 |
+| `nvidia_cuda_tensorrt` | 16 | 13 (81.25%) | 16 (100.0%) | 6 (37.50%) | 102888.01 / 693701.90 ms | 54.44 tok/s | 0.3496 |
+| `arm_embedded_rtl` | 15 | 15 (100.0%) | 15 (100.0%) | 14 (93.33%) | 47966.35 / 161688.35 ms | 52.43 tok/s | 0.1308 |
+| `modern_cpp17_pybind11` | 17 | 11 (64.71%) | 17 (100.0%) | 8 (47.06%) | 111252.67 / 325009.21 ms | 52.21 tok/s | 0.1575 |
+| `s2_geodesic_spatial` | 17 | 12 (70.59%) | 17 (100.0%) | 10 (58.82%) | 106631.15 / 323985.20 ms | 59.61 tok/s | 0.2295 |
 
 ---
 
-## 4. Quickstart: Load with Hugging Face `datasets` / `TRL`
+## 4. Dataset Access & Repository Structure
+
+The dataset files are available both in this repository (`musespark_harvester/output/`) and hosted on the [Hugging Face Hub](https://huggingface.co/datasets/La1itchauhan/Nemotron-3-Ultra-550B-Systems-CoT):
+
+- `musespark_systems_verified.jsonl`: 38 high-integrity samples that pass 100% of the 7-Agent verification council.
+- `musespark_systems_full_benchmark.jsonl`: 65 samples containing full performance telemetry, compiler diagnostics, and latency profiles.
+- `council_audit_report.json`: Machine-readable audit summary and per-split silicon telemetry metrics.
+
+---
+
+## 5. Quickstart: Load with Hugging Face `datasets` / `TRL`
 
 ```python
 from datasets import load_dataset
@@ -96,7 +106,7 @@ print(ds_verified[0]["messages"])
 
 ---
 
-## 5. Citation
+## 6. Citation
 
 ```bibtex
 @misc{chauhan2026nemotron3_ultra_systems_cot,
