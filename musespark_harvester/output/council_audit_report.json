@@ -1,90 +1,236 @@
 {
   "summary": {
-    "full_benchmark_count": 65,
-    "verified_split_count": 38,
-    "full_path": "C:\\Users\\Lalit Chauhan\\.gemini\\antigravity\\scratch\\Nemotron-3-Ultra-550B-Systems-CoT\\musespark_harvester\\output\\musespark_systems_full_benchmark.jsonl",
-    "verified_path": "C:\\Users\\Lalit Chauhan\\.gemini\\antigravity\\scratch\\Nemotron-3-Ultra-550B-Systems-CoT\\musespark_harvester\\output\\musespark_systems_verified.jsonl"
+    "raw_harvest_count": 143,
+    "full_benchmark_count": 134,
+    "verified_split_count": 36,
+    "require_executed_gate": true,
+    "distinct_subcategories_benchmark": 40,
+    "distinct_subcategories_verified": 21,
+    "verified_compiler_exec_Breakdown": {
+      "g++ -std=c++17 -fsyntax-only -Wall -Wextra | g++_cpp_asan_ubsan_exec | executed": 18,
+      "gcc -std=c11 -fsyntax-only -Wall -Wextra | gcc_c_asan_ubsan_exec | executed": 14,
+      "g++ -std=c++17 -fsyntax-only -Wall -Wextra | g++_cpp_binary_exec | executed": 3,
+      "python3 -m py_compile | python3_runtime_sandbox | executed": 1
+    },
+    "generated_at_utc": "2026-11-10T16:24:09Z",
+    "git_sha": "local-working-tree",
+    "full_path": "musespark_harvester/output/musespark_systems_full_benchmark.jsonl",
+    "verified_path": "musespark_harvester/output/musespark_systems_verified.jsonl"
   },
   "models": {
     "nvidia/nemotron-3-ultra-550b-a55b": {
-      "total_samples": 49,
-      "compiler_verified_count": 36,
-      "compiler_pass_rate_pct": 73.47,
-      "exec_pass_at_1_count": 49,
-      "exec_pass_at_1_pct": 100.0,
-      "council_verified_count": 25,
-      "council_pass_rate_pct": 51.02,
-      "latency_p50_ms": 129362.3,
-      "latency_p95_ms": 323985.2,
-      "throughput_p50_tok_s": 51.93,
-      "mean_overthinking_ratio": 0.2296
+      "total_samples": 54,
+      "first_attempt_n": 54,
+      "first_attempt_syntax_count": 25,
+      "first_attempt_verified_count": 7,
+      "first_attempt_pass_rate_pct": 12.96,
+      "first_attempt_ci_95": [
+        6.42,
+        24.42
+      ],
+      "compiler_verified_count": 28,
+      "compiler_pass_rate_pct": 51.85,
+      "compiler_ci_95": [
+        38.85,
+        64.61
+      ],
+      "self_test_exec_count": 10,
+      "self_test_exec_pct": 18.52,
+      "council_verified_count": 10,
+      "council_pass_rate_pct": 18.52,
+      "council_ci_95": [
+        10.38,
+        30.84
+      ],
+      "native_executed_verified_count": 10,
+      "latency_p50_ms": 127617.26,
+      "latency_p95_ms": 324343.6,
+      "throughput_p50_tok_s": 50.81,
+      "mean_overthinking_ratio": 0.2257
     },
     "openai/gpt-oss-120b": {
-      "total_samples": 16,
-      "compiler_verified_count": 15,
-      "compiler_pass_rate_pct": 93.75,
-      "exec_pass_at_1_count": 16,
-      "exec_pass_at_1_pct": 100.0,
-      "council_verified_count": 13,
-      "council_pass_rate_pct": 81.25,
-      "latency_p50_ms": 13813.41,
-      "latency_p95_ms": 22549.41,
-      "throughput_p50_tok_s": 214.99,
-      "mean_overthinking_ratio": 0.1802
+      "total_samples": 72,
+      "first_attempt_n": 72,
+      "first_attempt_syntax_count": 54,
+      "first_attempt_verified_count": 25,
+      "first_attempt_pass_rate_pct": 34.72,
+      "first_attempt_ci_95": [
+        24.75,
+        46.24
+      ],
+      "compiler_verified_count": 54,
+      "compiler_pass_rate_pct": 75.0,
+      "compiler_ci_95": [
+        63.91,
+        83.56
+      ],
+      "self_test_exec_count": 25,
+      "self_test_exec_pct": 34.72,
+      "council_verified_count": 25,
+      "council_pass_rate_pct": 34.72,
+      "council_ci_95": [
+        24.75,
+        46.24
+      ],
+      "native_executed_verified_count": 25,
+      "latency_p50_ms": 20339.64,
+      "latency_p95_ms": 71660.59,
+      "throughput_p50_tok_s": 141.82,
+      "mean_overthinking_ratio": 0.1928
+    },
+    "openai/gpt-oss-20b": {
+      "total_samples": 8,
+      "first_attempt_n": 8,
+      "first_attempt_syntax_count": 3,
+      "first_attempt_verified_count": 1,
+      "first_attempt_pass_rate_pct": 12.5,
+      "first_attempt_ci_95": [
+        2.24,
+        47.09
+      ],
+      "compiler_verified_count": 3,
+      "compiler_pass_rate_pct": 37.5,
+      "compiler_ci_95": [
+        13.68,
+        69.43
+      ],
+      "self_test_exec_count": 2,
+      "self_test_exec_pct": 25.0,
+      "council_verified_count": 1,
+      "council_pass_rate_pct": 12.5,
+      "council_ci_95": [
+        2.24,
+        47.09
+      ],
+      "native_executed_verified_count": 1,
+      "latency_p50_ms": 25739.28,
+      "latency_p95_ms": 57114.86,
+      "throughput_p50_tok_s": 145.98,
+      "mean_overthinking_ratio": 0.3461
     }
   },
   "splits": {
     "nvidia_cuda_tensorrt": {
-      "total_samples": 16,
-      "compiler_verified_count": 13,
-      "compiler_pass_rate_pct": 81.25,
-      "exec_pass_at_1_count": 16,
-      "exec_pass_at_1_pct": 100.0,
+      "total_samples": 35,
+      "first_attempt_n": 35,
+      "first_attempt_syntax_count": 15,
+      "first_attempt_verified_count": 6,
+      "first_attempt_pass_rate_pct": 17.14,
+      "first_attempt_ci_95": [
+        8.1,
+        32.68
+      ],
+      "compiler_verified_count": 15,
+      "compiler_pass_rate_pct": 42.86,
+      "compiler_ci_95": [
+        27.98,
+        59.14
+      ],
+      "self_test_exec_count": 6,
+      "self_test_exec_pct": 17.14,
       "council_verified_count": 6,
-      "council_pass_rate_pct": 37.5,
-      "latency_p50_ms": 102888.01,
-      "latency_p95_ms": 693701.9,
-      "throughput_p50_tok_s": 54.44,
-      "mean_overthinking_ratio": 0.3496
+      "council_pass_rate_pct": 17.14,
+      "council_ci_95": [
+        8.1,
+        32.68
+      ],
+      "native_executed_verified_count": 6,
+      "latency_p50_ms": 31590.6,
+      "latency_p95_ms": 246259.46,
+      "throughput_p50_tok_s": 96.65,
+      "mean_overthinking_ratio": 0.2908
     },
     "arm_embedded_rtl": {
-      "total_samples": 15,
-      "compiler_verified_count": 15,
-      "compiler_pass_rate_pct": 100.0,
-      "exec_pass_at_1_count": 15,
-      "exec_pass_at_1_pct": 100.0,
+      "total_samples": 32,
+      "first_attempt_n": 32,
+      "first_attempt_syntax_count": 27,
+      "first_attempt_verified_count": 12,
+      "first_attempt_pass_rate_pct": 37.5,
+      "first_attempt_ci_95": [
+        22.93,
+        54.75
+      ],
+      "compiler_verified_count": 29,
+      "compiler_pass_rate_pct": 90.62,
+      "compiler_ci_95": [
+        75.78,
+        96.76
+      ],
+      "self_test_exec_count": 14,
+      "self_test_exec_pct": 43.75,
       "council_verified_count": 14,
-      "council_pass_rate_pct": 93.33,
-      "latency_p50_ms": 47966.35,
-      "latency_p95_ms": 161688.35,
-      "throughput_p50_tok_s": 52.43,
-      "mean_overthinking_ratio": 0.1308
+      "council_pass_rate_pct": 43.75,
+      "council_ci_95": [
+        28.17,
+        60.67
+      ],
+      "native_executed_verified_count": 14,
+      "latency_p50_ms": 27513.48,
+      "latency_p95_ms": 130033.63,
+      "throughput_p50_tok_s": 74.05,
+      "mean_overthinking_ratio": 0.1635
     },
     "modern_cpp17_pybind11": {
-      "total_samples": 17,
-      "compiler_verified_count": 11,
-      "compiler_pass_rate_pct": 64.71,
-      "exec_pass_at_1_count": 17,
-      "exec_pass_at_1_pct": 100.0,
-      "council_verified_count": 8,
-      "council_pass_rate_pct": 47.06,
-      "latency_p50_ms": 111252.67,
-      "latency_p95_ms": 325009.21,
-      "throughput_p50_tok_s": 52.21,
-      "mean_overthinking_ratio": 0.1575
+      "total_samples": 34,
+      "first_attempt_n": 34,
+      "first_attempt_syntax_count": 16,
+      "first_attempt_verified_count": 7,
+      "first_attempt_pass_rate_pct": 20.59,
+      "first_attempt_ci_95": [
+        10.35,
+        36.8
+      ],
+      "compiler_verified_count": 16,
+      "compiler_pass_rate_pct": 47.06,
+      "compiler_ci_95": [
+        31.45,
+        63.26
+      ],
+      "self_test_exec_count": 7,
+      "self_test_exec_pct": 20.59,
+      "council_verified_count": 7,
+      "council_pass_rate_pct": 20.59,
+      "council_ci_95": [
+        10.35,
+        36.8
+      ],
+      "native_executed_verified_count": 7,
+      "latency_p50_ms": 28789.51,
+      "latency_p95_ms": 219704.18,
+      "throughput_p50_tok_s": 95.28,
+      "mean_overthinking_ratio": 0.1981
     },
     "s2_geodesic_spatial": {
-      "total_samples": 17,
-      "compiler_verified_count": 12,
-      "compiler_pass_rate_pct": 70.59,
-      "exec_pass_at_1_count": 17,
-      "exec_pass_at_1_pct": 100.0,
-      "council_verified_count": 10,
-      "council_pass_rate_pct": 58.82,
-      "latency_p50_ms": 106631.15,
-      "latency_p95_ms": 323985.2,
-      "throughput_p50_tok_s": 59.61,
-      "mean_overthinking_ratio": 0.2295
+      "total_samples": 33,
+      "first_attempt_n": 33,
+      "first_attempt_syntax_count": 24,
+      "first_attempt_verified_count": 8,
+      "first_attempt_pass_rate_pct": 24.24,
+      "first_attempt_ci_95": [
+        12.83,
+        41.02
+      ],
+      "compiler_verified_count": 25,
+      "compiler_pass_rate_pct": 75.76,
+      "compiler_ci_95": [
+        58.98,
+        87.17
+      ],
+      "self_test_exec_count": 10,
+      "self_test_exec_pct": 30.3,
+      "council_verified_count": 9,
+      "council_pass_rate_pct": 27.27,
+      "council_ci_95": [
+        15.07,
+        44.22
+      ],
+      "native_executed_verified_count": 9,
+      "latency_p50_ms": 31721.58,
+      "latency_p95_ms": 244474.38,
+      "throughput_p50_tok_s": 113.69,
+      "mean_overthinking_ratio": 0.2028
     }
-  }
+  },
+  "dataset_card": "musespark_harvester/output/README.md",
+  "github_readme": "musespark_harvester/output/GITHUB_README.md"
 }

@@ -1,0 +1,33 @@
+name: CI Verification Council
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies and native compilers
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-12 g++-12 libasan8 libubsan1 make
+        python -m pip install --upgrade pip
+        pip install python-dotenv huggingface_hub
+
+    - name: Run Verification Council Self-Test
+      run: make test
+
+    - name: Verify Audit Report and README Consistency
+      run: make check-consistency

@@ -7,23 +7,17 @@ task_categories:
 language:
   - en
 tags:
-  - meta
-  - muse-spark-open
-  - baseten
-  - nvidia
-  - nemotron-3-ultra
-  - groq
   - chain-of-thought
   - reasoning
   - code
   - cuda
-  - tensorrt
   - arm
   - cpp17
-  - s2geometry
-  - geospatial
-  - systems-engineering
-pretty_name: "Nemotron-3-Ultra-550B-Systems-CoT: 7-Agent Compiler-Verified Reasoning Dataset & Multi-Silicon Benchmark"
+  - geodesy
+  - nvidia
+  - nemotron
+  - groq
+pretty_name: "Nemotron-3-Ultra-550B-Systems-CoT: Systems Programming Chain-of-Thought Dataset"
 configs:
   - config_name: verified
     default: true
@@ -36,81 +30,96 @@ configs:
         path: musespark_systems_full_benchmark.jsonl
 ---
 
-# Nemotron-3-Ultra-550B-Systems-CoT: 7-Agent Compiler-Verified Chain-of-Thought Dataset & Multi-Silicon Infrastructure Benchmark
+# Nemotron-3-Ultra-550B-Systems-CoT: Systems Programming Chain-of-Thought Dataset & Multi-Provider Evaluation
 
-**Author:** Lalit Chauhan ([@la1itchauhan](https://github.com/la1itchauhan))  
-**Attribution:** Harvesting pipeline supports Muse Spark Open (`meta-models/muse-spark-open-1026` via Baseten); empirical benchmark baseline evaluated across NVIDIA NIM (`nvidia/nemotron-3-ultra-550b-a55b` on NVIDIA GPU Clusters) and Groq LPU Silicon (`openai/gpt-oss-120b`).
-
----
-
-## 1. Executive Summary
-
-Following the verification paradigm established by **DeepSeek-R1 (`OpenThoughts-114k`, `Bespoke-Stratos-17k`, `Open-R1`)** and **NVIDIA `ComputeEval`**, `Nemotron-3-Ultra-550B-Systems-CoT` is an audited, runtime-verified Chain-of-Thought (`<think>...</think>`) reasoning dataset and multi-silicon serving benchmark across **low-level GPU/CUDA kernels, ARM bare-metal drone/embedded firmware, Modern C++17 systems, and Geodesic S2 / aerial mapping mathematics**.
-
-Every sample is audited by a **7-Agent Local Verification Council**:
-1. **Agent 1 (Compiler & Syntax Gatekeeper):** Validates C++17 (`g++ -std=c++17 -fsyntax-only -Wall`), C11 (`gcc -std=c11 -fsyntax-only -Wall`), and Python (`python3 -m py_compile`).
-2. **Agent 2 (Functional Execution `Pass@1` Sandbox):** Compiles and executes self-contained `main()` test harnesses under a 5-second timeout to verify exit code `0` and unit assertions.
-3. **Agent 3 (CoT Completeness, Anti-Stub & Secret Sanitizer):** Enforces closed code fence integrity, non-empty `<think>` reasoning traces, zero `TODO`/placeholder stubs, and zero credential leakage.
-4. **Agent 4 (Domain Hardware & Mathematical Invariant Auditor):** Verifies fixed-width register types, alignment (`alignas(64)`), warp/tile primitives, and 64-bit `double` geodetic precision.
-5. **Agent 5 (Silicon-vs-Silicon Telemetry Profiler):** Measures end-to-end latency (`latency_ms` P50/P95), token throughput (`tokens_per_sec`), and `overthinking_ratio` (`reasoning_tokens / completion_tokens`).
-6. **Agent 6 (OpenThoughts / Open-R1 Dual-Schema Formatter):** Provides both structured fields and a canonical `messages` column (`<think>\n...\n</think>\n\n...`) compatible with **Hugging Face TRL**, **LLaMA-Factory**, and **Axolotl** in 1 line of code.
-7. **Agent 7 (Reproducible Leaderboard Generator):** Publishes exact empirical metrics with zero synthetic extrapolation.
+**Author:** Lalit Chauhan ([@La1itchauhan](https://github.com/La1itchauhan))  
+**Audit Stamp:** `2026-11-10T16:24:09Z` | **Git Revision:** `local-working-tree`  
+**Raw Harvested Responses:** `143` | **Deduplicated Benchmark Runs (`full_benchmark`):** `134` | **Verified Split Rows (`verified`):** `36`  
+**Distinct Task Families Covered:** `40` in benchmark (`21` in verified) out of `40` total families (`2,500`-prompt bank).
 
 ---
 
-## 2. Silicon-vs-Silicon Model & Hardware Leaderboard (NVIDIA NIM 550B vs. Groq LPU 120B)
+## 1. Overview & Scope
 
-| Model | Inference Silicon | Deduplicated Samples | Compiler Syntax Pass | Full 7-Agent Verified | Median Latency (P50) | Median Throughput | Mean Overthinking Ratio |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| `nvidia/nemotron-3-ultra-550b-a55b` | NVIDIA GPU Cluster (NIM) | 49 | 36 (73.47%) | 25 (51.02%) | 129362.30 ms | **51.93 tok/s** | 0.2296 |
-| `openai/gpt-oss-120b` | Groq LPU Silicon | 16 | 15 (93.75%) | 13 (81.25%) | 13813.41 ms | **214.99 tok/s** | 0.1802 |
-
----
-
-## 3. Domain Split Leaderboard (Deduplicated Best-of-N)
-
-- **Total Deduplicated Benchmark Samples (`full_benchmark` config):** `65`
-- **100% Council & Compiler-Verified Samples (`verified` config):** `38`
-
-| Split | Samples | Syntax Pass (`g++`/`gcc`/`py`) | Functional `Pass@1` | Full 7-Agent Council Pass | Latency (P50 / P95) | Median Throughput | Mean Overthinking Ratio |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| `nvidia_cuda_tensorrt` | 16 | 13 (81.25%) | 16 (100.0%) | 6 (37.50%) | 102888.01 / 693701.90 ms | 54.44 tok/s | 0.3496 |
-| `arm_embedded_rtl` | 15 | 15 (100.0%) | 15 (100.0%) | 14 (93.33%) | 47966.35 / 161688.35 ms | 52.43 tok/s | 0.1308 |
-| `modern_cpp17_pybind11` | 17 | 11 (64.71%) | 17 (100.0%) | 8 (47.06%) | 111252.67 / 325009.21 ms | 52.21 tok/s | 0.1575 |
-| `s2_geodesic_spatial` | 17 | 12 (70.59%) | 17 (100.0%) | 10 (58.82%) | 106631.15 / 323985.20 ms | 59.61 tok/s | 0.2295 |
+`Nemotron-3-Ultra-550B-Systems-CoT` is an open-source dataset and evaluation harness collecting step-by-step Chain-of-Thought (`<think>...</think>`) traces and self-contained C11, C++17, and Python code across four systems domains:
+1. **`nvidia_cuda_tensorrt`**: Host-emulated CUDA warp reductions, shared-memory bank-conflict-free matrix transpose, FP4/INT8 groupwise dequantization, and aerial LiDAR voxel downsampling. *(Note: C++17 tasks execute as portable CPU thread-block emulations so they can be checked without a discrete GPU; run with `nvcc` for device-kernel benchmarking.)*
+2. **`arm_embedded_rtl`**: Bare-metal C11 (`-std=c11`) MMIO register drivers with Write-1-to-Clear (`W1C`) semantics, lock-free SPSC DMA descriptor rings, Q15.16 fixed-point drone ESC PID loops, and MAVLink v2 frame telemetry parsers.
+3. **`modern_cpp17_pybind11`**: Modern C++17 (`-std=c++17`) rational time-range resamplers, `alignas(64)` arena allocators, lock-free work-stealing deques, and 6-DOF IMU+GNSS Kalman filters.
+4. **`s2_geodesic_spatial`**: WGS84 spherical excess polygon area (L'Huilier's theorem), S2 Hilbert cell ID encoders, UAV photogrammetry Ground Sample Distance (GSD) ray-DEM intersection, and WGS84-to-NED waypoint converters.
 
 ---
 
-## 4. Dataset Access & Repository Structure
+## 2. Verification Pipeline & Honest `verification_level` Accounting
 
-The dataset files are available both in this repository (`musespark_harvester/output/`) and hosted on the [Hugging Face Hub](https://huggingface.co/datasets/La1itchauhan/Nemotron-3-Ultra-550B-Systems-CoT):
+Every row in `full_benchmark` and `verified` includes an explicit `verification_level` column:
+- **`executed`**: Compiled with native `gcc -std=c11` / `g++ -std=c++17` (with `-Wall -Wextra` and AddressSanitizer/UBSan when supported by the host toolchain) or run in `python3`, exited with code `0`, and passed Agent 4 domain bug checks.
+- **`compiled_only`**: Compiled with native `gcc`/`g++` without binary execution.
+- **`syntax_fallback`**: Checked in a cloud container where `gcc`/`g++` was not installed (`delimiter_balance_fallback` + C11 keyword enforcement + Agent 4 static bug checks). To re-verify all C/C++ rows to `verification_level == "executed"`, run `python3 musespark_harvester/verify_and_push_hf.py --require-executed` on a workstation or container with `build-essential` (`gcc`/`g++`) installed.
 
-- `musespark_systems_verified.jsonl`: 38 high-integrity samples that pass 100% of the 7-Agent verification council.
-- `musespark_systems_full_benchmark.jsonl`: 65 samples containing full performance telemetry, compiler diagnostics, and latency profiles.
-- `council_audit_report.json`: Machine-readable audit summary and per-split silicon telemetry metrics.
+### Current `verified` Split Breakdown (`agent1_compiler | agent2_exec_mode | verification_level`)
+- `g++ -std=c++17 -fsyntax-only -Wall -Wextra | g++_cpp_asan_ubsan_exec | executed`: **18** rows
+- `gcc -std=c11 -fsyntax-only -Wall -Wextra | gcc_c_asan_ubsan_exec | executed`: **14** rows
+- `g++ -std=c++17 -fsyntax-only -Wall -Wextra | g++_cpp_binary_exec | executed`: **3** rows
+- `python3 -m py_compile | python3_runtime_sandbox | executed`: **1** rows
 
 ---
 
-## 5. Quickstart: Load with Hugging Face `datasets` / `TRL`
+## 3. Per-Model & Provider Evaluation Summary
+
+*Note on Experimental Confounds:* Comparing `nvidia/nemotron-3-ultra-550b-a55b` on NVIDIA NIM against `openai/gpt-oss-120b` and `openai/gpt-oss-20b` on Groq Cloud reflects joint differences in **model architecture, parameter count, serving provider queues, and output length**, not isolated silicon hardware alone. Both first-attempt pass rates and deduplicated best-of-N rates are reported below with **95% Wilson confidence intervals**.
+
+| Model | Endpoint Provider | Deduplicated Samples ($n$) | Syntax Valid (`Agent 1`) | First-Attempt Verified (95% Wilson CI) | Best-of-N Verified (95% Wilson CI) | Latency P50 / P95 (ms) | Median Throughput | Mean Overthinking Ratio |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| `nvidia/nemotron-3-ultra-550b-a55b` | NVIDIA NIM API (GPU) | 54 | 28/54 (51.85%) | 7/54 (12.96%, 95% CI [6.42–24.42%]) | 10/54 (18.52%, 95% CI [10.38–30.84%]) | 127617.26 / 324343.6 ms | 50.81 tok/s | 0.2257 |
+| `openai/gpt-oss-120b` | Groq Cloud API (LPU) | 72 | 54/72 (75.0%) | 25/72 (34.72%, 95% CI [24.75–46.24%]) | 25/72 (34.72%, 95% CI [24.75–46.24%]) | 20339.64 / 71660.59 ms | 141.82 tok/s | 0.1928 |
+| `openai/gpt-oss-20b` | Groq Cloud API (LPU) | 8 | 3/8 (37.5%) | 1/8 (12.5%, 95% CI [2.24–47.09%]) | 1/8 (12.5%, 95% CI [2.24–47.09%]) | 25739.28 / 57114.86 ms | 145.98 tok/s | 0.3461 |
+
+---
+
+## 4. Per-Split Domain Summary
+
+| Split | Deduplicated Samples ($n$) | Syntax Valid (`Agent 1`) | Runtime / Sandbox Pass (`Agent 2`) | First-Attempt Verified (95% Wilson CI) | Best-of-N Verified (95% Wilson CI) | Latency P50 / P95 (ms) | Median Throughput | Mean Overthinking Ratio |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| `nvidia_cuda_tensorrt` | 35 | 15/35 (42.86%) | 6/35 (17.14%) | 6/35 (17.14%, 95% CI [8.1–32.68%]) | 6/35 (17.14%, 95% CI [8.1–32.68%]) | 31590.6 / 246259.46 ms | 96.65 tok/s | 0.2908 |
+| `arm_embedded_rtl` | 32 | 29/32 (90.62%) | 14/32 (43.75%) | 12/32 (37.5%, 95% CI [22.93–54.75%]) | 14/32 (43.75%, 95% CI [28.17–60.67%]) | 27513.48 / 130033.63 ms | 74.05 tok/s | 0.1635 |
+| `modern_cpp17_pybind11` | 34 | 16/34 (47.06%) | 7/34 (20.59%) | 7/34 (20.59%, 95% CI [10.35–36.8%]) | 7/34 (20.59%, 95% CI [10.35–36.8%]) | 28789.51 / 219704.18 ms | 95.28 tok/s | 0.1981 |
+| `s2_geodesic_spatial` | 33 | 25/33 (75.76%) | 10/33 (30.3%) | 8/33 (24.24%, 95% CI [12.83–41.02%]) | 9/33 (27.27%, 95% CI [15.07–44.22%]) | 31721.58 / 244474.38 ms | 113.69 tok/s | 0.2028 |
+
+---
+
+## 5. Teacher Model Output Licensing & Attribution
+
+The repository code and verification scripts are licensed under **Apache-2.0** (`LICENSE`). The generated model outputs in the dataset are governed by the respective upstream model licenses:
+
+| Source Model | Provider | Upstream Model License | Redistribution & Derivative Terms |
+| :--- | :--- | :--- | :--- |
+| `nvidia/nemotron-3-ultra-550b-a55b` | NVIDIA NIM | [NVIDIA Open Model License](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-open-model-license/) | Permits commercial and research use, redistribution of model outputs, and training derivative models. |
+| `openai/gpt-oss-120b` & `openai/gpt-oss-20b` | Groq Cloud | Apache-2.0 | Permissive open-weights license permitting output redistribution and derivative model training with attribution. |
+
+---
+
+## 6. Quickstart: Load & Inspect Verification Levels
 
 ```python
 from datasets import load_dataset
 
-# Load the 100% compiler-verified Chain-of-Thought split (default)
-ds_verified = load_dataset("La1itchauhan/Nemotron-3-Ultra-550B-Systems-CoT", "verified", split="train")
+# Load the verified split
+ds = load_dataset("La1itchauhan/Nemotron-3-Ultra-550B-Systems-CoT", "verified", split="train")
+df = ds.to_pandas()
+print(df[["agent1_compiler", "agent2_exec_mode", "verification_level"]].value_counts())
 
-# Or load the full empirical benchmark (including compiler failure diagnostics & latency telemetry)
-ds_benchmark = load_dataset("La1itchauhan/Nemotron-3-Ultra-550B-Systems-CoT", "full_benchmark", split="test")
-print(ds_verified[0]["messages"])
+# Filter strictly to native binary/script executed rows
+df_executed = df[df["verification_level"] == "executed"]
+print(f"Native executed rows: {len(df_executed)}")
 ```
 
 ---
 
-## 6. Citation
+## 7. Citation
 
 ```bibtex
-@misc{chauhan2026nemotron3_ultra_systems_cot,
-  title={Nemotron-3-Ultra-550B-Systems-CoT: A 7-Agent Compiler-Verified Chain-of-Thought Dataset and Multi-Silicon Infrastructure Benchmark for Systems, Silicon, C++17, and Geodesic Engineering},
+@misc{chauhan2026systems_cot,
+  title={Nemotron-3-Ultra-550B-Systems-CoT: Systems Programming Chain-of-Thought Dataset and Multi-Provider Evaluation Harness},
   author={Chauhan, Lalit},
   year={2026},
   publisher={Hugging Face},
