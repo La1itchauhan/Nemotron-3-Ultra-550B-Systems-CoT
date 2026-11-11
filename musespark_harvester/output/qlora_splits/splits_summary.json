@@ -1,0 +1,15 @@
+{
+  "arm3_verified_count": 35,
+  "arm2_unverified_count": 35,
+  "held_out_eval_count": 8,
+  "held_out_task_families": [
+    "Fused RoPE (Rotary Position Embedding) + RMSNorm",
+    "RAII Reference-Counted Intrusive Smart Pointer for C++/Python Bridge",
+    "Drone Photogrammetry Ground Sample Distance (GSD) & Gimbal Ray-DEM Intersection",
+    "Cache-Coherent Bounce Buffer Allocator with 64-Byte Alignment",
+    "S2 Geometry Cube-Face Projection & 64-Bit Hilbert Curve Cell ID Encoder",
+    "SIMD-Vectorized SoA (Structure-of-Arrays) Frustum & Bounding-Box Culler",
+    "MAVLink v2 Zero-Copy Frame Telemetry Parser & X.25 CRC-16 Verifier",
+    "Ring-AllReduce NCCL Bandwidth-Optimal Chunk Scheduler"
+  ]
+}
