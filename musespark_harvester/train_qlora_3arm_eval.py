@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 """
 Nemotron-3-Ultra-550B-Systems-CoT: 3-Arm QLoRA Ablation & Verification Harness
 Author: Lalit Chauhan (@La1itchauhan)
@@ -36,11 +37,21 @@ try:
 except ImportError:
     HAS_TRAIN_DEPS = False
 
+# Import VerificationCouncil from local package
+try:
+    from verify_and_push_hf import VerificationCouncil, extract_code_blocks
+except ImportError:
+    try:
+        from musespark_harvester.verify_and_push_hf import VerificationCouncil, extract_code_blocks
+    except ImportError:
+        VerificationCouncil = None
+
 
 DEFAULT_BASE_MODEL = "Qwen/Qwen2.5-Coder-7B-Instruct"
 OUTPUT_DIR = Path(__file__).resolve().parent / "output"
 VERIFIED_PATH = OUTPUT_DIR / "musespark_systems_verified.jsonl"
 BENCHMARK_PATH = OUTPUT_DIR / "musespark_systems_full_benchmark.jsonl"
+SPLITS_DIR = OUTPUT_DIR / "qlora_splits"
 
 
 def get_qlora_config(rank: int = 16, alpha: int = 32, dropout: float = 0.05) -> LoraConfig:
@@ -87,7 +98,17 @@ def prepare_training_split(arm: str, max_samples: Optional[int] = None) -> List[
     if arm == "arm1_base":
         return []
 
-    source_path = VERIFIED_PATH if arm == "arm3_verified" else BENCHMARK_PATH
+    # Check qlora_splits first if present
+    arm3_split = SPLITS_DIR / "arm3_verified_35.jsonl"
+    arm2_split = SPLITS_DIR / "arm2_unverified_35.jsonl"
+
+    if arm == "arm3_verified" and arm3_split.exists():
+        source_path = arm3_split
+    elif arm == "arm2_unverified" and arm2_split.exists():
+        source_path = arm2_split
+    else:
+        source_path = VERIFIED_PATH if arm == "arm3_verified" else BENCHMARK_PATH
+
     if not source_path.exists():
         raise FileNotFoundError(f"Source dataset not found at {source_path}")
 
@@ -170,20 +191,99 @@ def run_training_arm(
     print(f"[SUCCESS] Saved {arm} adapter to {arm_output / 'final_adapter'}\n")
 
 
+def evaluate_predictions_file(pred_file_path: str):
+    """Scores a JSONL predictions file through VerificationCouncil (gcc/g++ + ASan/UBSan)."""
+    p_path = Path(pred_file_path)
+    if not p_path.exists():
+        print(f"[ERROR] Prediction file not found: {p_path}")
+        return
+
+    print(f"\n{'='*70}\n[SCORING PREDICTIONS] File: {p_path.name}\n{'='*70}")
+
+    if VerificationCouncil is None:
+        print("[ERROR] VerificationCouncil module could not be imported.")
+        return
+
+    council = VerificationCouncil()
+    records = []
+    with open(p_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                try:
+                    records.append(json.loads(line))
+                except Exception:
+                    pass
+
+    n = len(records)
+    if n == 0:
+        print("[ERROR] Prediction file contains 0 valid JSON rows.")
+        return
+
+    syntax_passes = 0
+    exec_passes = 0
+    council_passes = 0
+
+    for idx, r in enumerate(records, 1):
+        answer = r.get("final_answer", "") or r.get("prediction", "") or r.get("content", "")
+        split = r.get("split", "arm_embedded_rtl")
+        lang = r.get("language", "c" if split == "arm_embedded_rtl" else "cpp")
+
+        blocks = extract_code_blocks(answer) if extract_code_blocks else []
+        code = blocks[0][1] if blocks else answer
+
+        syn_ok, comp, diag = council.agent1_compiler_syntax(code, lang)
+        exec_ok, mode, exec_diag = council.agent2_functional_exec(code, lang)
+        cot_ok, stub, stop, _ = council.agent3_cot_and_sanitize(r)
+        inv_ok, _ = council.agent4_domain_invariants(split, code)
+
+        verified = syn_ok and exec_ok and inv_ok
+
+        if syn_ok: syntax_passes += 1
+        if exec_ok: exec_passes += 1
+        if verified: council_passes += 1
+
+        print(f" - [{idx}/{n}] Task: {r.get('task_id', f'task_{idx}'):<30} | Syntax: {syn_ok} | Exec: {exec_ok} | Council: {verified}")
+
+    print("\n" + "="*50)
+    print(f"EVALUATION RESULTS: {p_path.name}")
+    print("="*50)
+    print(f"Total Evaluated Tasks      : {n}")
+    print(f"Compiler Syntax Valid      : {syntax_passes}/{n} ({round(syntax_passes/n*100, 2)}%)")
+    print(f"Native Executed (Pass@1)   : {exec_passes}/{n} ({round(exec_passes/n*100, 2)}%)")
+    print(f"Full Council Verified      : {council_passes}/{n} ({round(council_passes/n*100, 2)}%)")
+    print("="*50 + "\n")
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="3-Arm QLoRA Ablation Harness")
-    parser.add_argument("--arm", choices=["arm1_base", "arm2_unverified", "arm3_verified", "all"], default="arm3_verified")
+    parser.add_argument("--arm", choices=["arm1_base", "arm2_unverified", "arm3_verified", "all"], default=None)
     parser.add_argument("--base-model", type=str, default=DEFAULT_BASE_MODEL)
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=2)
     parser.add_argument("--lr", type=float, default=2e-4)
-    parser.add_argument("--output-dir", type=str, default="./qlora_ablation_output")
+    parser.add_argument("--output-dir", "--out-dir", dest="output_dir", type=str, default="./qlora_ablation_output")
     parser.add_argument("--max-samples", type=int, default=None)
+    parser.add_argument("--eval-predictions", type=str, default=None, help="Path to JSONL predictions to score")
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
+
+    # If --eval-predictions passed, run scoring mode
+    if args.eval_predictions:
+        evaluate_predictions_file(args.eval_predictions)
+        return
+
+    # If --out-dir specified without --arm, generate the splits
+    if args.arm is None:
+        try:
+            from prepare_qlora_splits import generate_splits
+        except ImportError:
+            from musespark_harvester.prepare_qlora_splits import generate_splits
+        generate_splits()
+        return
+
     if args.arm == "all":
         for arm_name in ["arm1_base", "arm2_unverified", "arm3_verified"]:
             run_training_arm(
